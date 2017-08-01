@@ -13,3 +13,8 @@ output
 Evan is Level 27, wow- how sad
 ```
 View the wiki for documentation on the user type
+
+## Requirements
+To install any modules use `pip3 install (module)`
+* requests
+* beautifulsoup4
