@@ -12,7 +12,7 @@ __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
 __license__ = "GNU GPLv3"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 
@@ -48,7 +48,9 @@ class user:
       self.games = self.getGames()
       self.wishlist = self.getWishlist()
    def printAll(self):
-      [print(f'{a}: {self.__getattribute__(a)}') for a in dir(self) if not a.startswith('__') and not callable(evan.__getattribute__(a)) and a != 'req']
+      """For debugging purposes, prints all the non-callable items in the user object
+      """
+      [print(f'{a}: {self.__getattribute__(a)}') for a in dir(self) if not a.startswith('__') and not a.startswith('soup') and not callable(evan.__getattribute__(a)) and a != 'req']
       print()
    def getPersona(self):
       """Returns the display-name (persona) of the user
@@ -186,9 +188,7 @@ class Game:
       self.name = inst['name']
       self.logo = inst['logo']
       self.hours = float(inst['hours_forever']) if 'hours_forever' in inst else 0
-      if('hours' in inst):
-         self.recent = float(inst['hours'])
-         self.hours += self.recent - floor(self.recent)
+      self.recent = float(inst['hours']) if 'hours' in inst else 0         
       self.last = inst['last_played'] if 'last_played' in inst else 0
 
 
