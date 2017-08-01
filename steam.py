@@ -11,8 +11,8 @@ __author__ = "Evan Young"
 __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
-__license__ = "GPL"
-__version__ = "1.0.0-rc"
+__license__ = "GNU GPLv3"
+__version__ = "1.0.1"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 
