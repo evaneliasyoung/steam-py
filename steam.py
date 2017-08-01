@@ -12,7 +12,7 @@ __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
 __license__ = "GNU GPLv3"
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 

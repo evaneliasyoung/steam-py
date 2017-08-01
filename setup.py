@@ -3,9 +3,9 @@ from distutils.core import setup
 setup(
    name = 'steam',
    packages = ['steam'],
-   version = '1.0.2',
+   version = '1.0.3',
    description = 'A Steam API',
-   author 'Evan Young',
+   author = 'Evan Young',
    url = 'https://github.com/DocCodes/steam',
    download_url = 'https://github.com/DocCodes/steam/archive/master.tar.gz',
    keywords = ['steam', 'api', 'userdata'],
@@ -13,7 +13,7 @@ setup(
       'Development Status :: 5 - Production',
       'Intended Audience :: Deevelopers',
       'Topic :: Steam User API',
-      'License :: GNUGLPv3',
+      'License :: GNU GPLv3',
       'Programming Language :: Python :: 3.6'
    ],
    install_requires = [
