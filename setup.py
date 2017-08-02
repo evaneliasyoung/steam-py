@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
    name = 'steam',
    packages = ['steam'],
-   version = '1.0.3',
+   version = '1.1.0',
    description = 'A Steam API',
    author = 'Evan Young',
    url = 'https://github.com/DocCodes/steam',
@@ -11,7 +11,7 @@ setup(
    keywords = ['steam', 'api', 'userdata'],
    classifiers = [
       'Development Status :: 5 - Production',
-      'Intended Audience :: Deevelopers',
+      'Intended Audience :: Developers',
       'Topic :: Steam User API',
       'License :: GNU GPLv3',
       'Programming Language :: Python :: 3.6'
