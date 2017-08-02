@@ -2,12 +2,23 @@
 A Python API for Steam userdata
 ## Installation
 1. First download this git
-   * `git clone https://github.com/DocCodes/steam`
 2. Change to the steam directory
-   * `cd steam`
 3. Then use pip3 to install it
-   * `pip3 install .`
-   * (if that doesn't work) `sudo pip3 install .`
+
+### Windows
+```
+cd /d %USERPROFILE%\Downloads
+git clone https:github.com/DocCodes/steam
+cd steam
+pip3 install .
+```
+### Linux / macOS
+```
+cd ~/Downloads
+git clone https://github.com/DocCodes/steam
+cd steam
+sudo pip3 install .
+```
 
 ## How-To Use
 ```
