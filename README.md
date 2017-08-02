@@ -17,7 +17,7 @@ pip3 install .
 cd ~/Downloads
 git clone https://github.com/DocCodes/steam
 cd steam
-sudo pip3 install .
+sudo -H pip3 install .
 ```
 
 ## How-To Use
