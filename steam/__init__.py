@@ -12,7 +12,7 @@ __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
 __license__ = "GNU GPLv3"
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 
@@ -221,5 +221,4 @@ class Game:
 if __name__ == '__main__':
    print("Hello Console!")
    evan = user('76561198069463927')
-   t = user('76561198277197958')
    #evan.printAll()
