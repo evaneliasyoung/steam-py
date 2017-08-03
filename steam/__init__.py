@@ -12,12 +12,11 @@ __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
 __license__ = "GNU GPLv3"
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 
 
-RemoveTags = lambda text: reg('<[^>]*>', '', text)
 RemoveTabs = lambda text: text.replace('\t', '')
 RemoveRets = lambda text: text.replace('\r', '')
 RemoveNews = lambda text: text.replace('\n', '')
@@ -41,25 +40,28 @@ class user:
       self.soupWish = BeautifulSoup(req(f'{self.url}wishlist/').text, 'html.parser')
       self.private = self.getPrivate()
       self.persona = self.getPersona()
+      self.avatar = self.getAvatar()
       if(self.private):
          self.name = None
-         self.avatar = None
+         self.location = None
          self.status = None
          self.level = None
          self.favBadge = None
          self.counts = None
          self.badges = None
          self.games = None
+         self.recents = None
          self.wishlist = None
       else:
          self.name = self.getName()
-         self.avatar = self.getAvatar()
+         self.location = self.getLocation()
          self.status = self.getStatus()
          self.level = self.getLevel()
          self.favBadge = self.getFavBadge()
          self.counts = self.getCounts()
          self.badges = self.getBadges()
          self.games = self.getGames()
+         self.recents = self.getRecents()
          self.wishlist = self.getWishlist()
    def printAll(self):
       """For debugging purposes, prints all the non-callable items in the user object
@@ -84,8 +86,19 @@ class user:
       """
 
       parElem = self.soupMain.find('div', class_='header_real_name ellipsis')
+      if(parElem == None): return None
       name = parElem.find('bdi').text
       return name if name != '' else None
+   def getLocation(self):
+      """Returns the location of the user
+      """
+
+      loc = {'flag': '', 'contents': ''}
+      parElem = self.soupMain.find('div', class_='header_real_name ellipsis')
+      if(parElem == None or parElem.find('img') == None): return None
+      loc['flag'] = parElem.find('img')['src']
+      loc['contents'] = parElem.contents[-1].strip()
+      return loc
    def getAvatar(self):
       """Returns the url of the avatar of the user
       """
@@ -154,8 +167,20 @@ class user:
       rawText = RemoveAlls(self.soupGames.findAll('script')[-1].text)
       aftText = rawText[rawText.index('[{'):rawText.index('}]')+2]
       jsonData = loads(aftText)
+      
       for i in range(0, len(jsonData)): games[jsonData[i]['appid']] = Game(jsonData[i])
       return games
+   def getRecents(self):
+      """Returns the recently games of the user
+      """
+
+      recents = []
+      allGames = self.soupMain.findAll('div', class_='recent_game_content')
+      for game in allGames:
+         parElem = game.find('div', class_='game_name')
+         nameElem = parElem.find('a', class_='whiteLink')
+         recents.append(nameElem.text.strip())
+      return recents
    def getWishlist(self):
       """Returns the wishlist of the user
       """
@@ -164,10 +189,15 @@ class user:
       allGames = self.soupWish.findAll('div', class_='wishlistRowItem')
       for game in allGames:
          app = MakeInt(game.find('div', class_='popup_block2')['id'])
-         price = game.find('div', class_='price').text.strip().replace('Free to Play', '$0.00')
+         priceElem = game.find('div', class_='discount_final_price') if (game.find('div', class_='discount_final_price') != None) else game.find('div', class_='price')
+         
+         price = '' if priceElem == None else priceElem.text.strip().lower()
+         if('free' in price): price = '0'
+         if(price != None and price != ''): price = MakeFloat(price)
+         
          games[app] = {}
          games[app]['name'] = game.find('h4', class_='ellipsis').text
-         games[app]['price'] = None if price == '' else MakeFloat(price)
+         games[app]['price'] = price
          games[app]['rank'] = MakeInt(game.find('div', class_='wishlist_rank_ro').text)
          games[app]['date'] = game.find('div', class_='wishlist_added_on ellipsis').text.strip().replace('Added on ', '')
       return games
@@ -198,6 +228,7 @@ class Badge:
 
       lvlxp = RemoveAlls(self.inst.find('div', class_='').text).split(',')      
       for i in range(0, len(lvlxp)): lvlxp[i] = MakeInt(lvlxp[i])
+      
       lvlxp.reverse()
       lvlxp.append(None)
       return lvlxp
@@ -213,8 +244,8 @@ class Game:
       self.appid = inst['appid']
       self.name = inst['name']
       self.logo = inst['logo']
-      self.hours = float(inst['hours_forever']) if 'hours_forever' in inst else 0
-      self.recent = float(inst['hours']) if 'hours' in inst else 0         
+      self.hours = MakeFloat(inst['hours_forever']) if 'hours_forever' in inst else 0
+      self.recent = MakeFloat(inst['hours']) if 'hours' in inst else 0     
       self.last = inst['last_played'] if 'last_played' in inst else 0
 
 
