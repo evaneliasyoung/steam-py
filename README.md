@@ -25,7 +25,7 @@ sudo -H pip3 install .
 ```
 import steam
 
-evan = steam.user(76561198069463927) # My Steam account, provided in SteamID64
+evan = steam.user('76561198069463927') # My Steam account, provided in SteamID64
 print(f'{evan.name} is Level {evan.level}, wow- how sad')
 ```
 output
