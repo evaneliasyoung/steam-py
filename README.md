@@ -8,9 +8,8 @@ The time from profile request to usable data is ≈ 3 seconds
 3. Then use pip3 to install it
 
 ### Windows
+*See above to obtain code*
 ```
-cd /d %USERPROFILE%\Downloads
-git clone https:github.com/DocCodes/steam
 cd steam
 pip3 install .
 ```
