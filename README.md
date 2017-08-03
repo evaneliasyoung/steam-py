@@ -1,5 +1,6 @@
 # steam
 A Python API for Steam userdata
+
 The time from profile request to usable data is ≈ 3 seconds
 
 ## Installation
