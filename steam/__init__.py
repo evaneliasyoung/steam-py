@@ -7,14 +7,14 @@ from json import loads
 from re import sub as reg
 from math import floor
 
-__author__ = "Evan Young"
-__copyright__ = "Copyright 2017, Evan Young"
-__credits__ = "Evan Young"
+__author__ = 'Evan Young'
+__copyright__ = 'Copyright 2017, Evan Young'
+__credits__ = 'Evan Young'
 
-__license__ = "GNU GPLv3"
-__version__ = "1.2.1"
-__maintainer__ = "Evan Young"
-__status__ = "Development"
+__license__ = 'GNU GPLv3'
+__version__ = '1.3-b1'
+__maintainer__ = 'Evan Young'
+__status__ = 'Development'
 
 
 RemoveTabs = lambda text: text.replace('\t', '')
@@ -24,49 +24,45 @@ RemoveAlls = lambda text: RemoveTabs(RemoveRets(RemoveNews(text)))
 MakeInt = lambda text: int(reg('[^0-9]', '', text))
 MakeFloat = lambda text: float(reg('[^0-9.]', '', text))
 class user:
-   def __init__(self, steam64):
+   def __init__(self, s64=None, sid=None):
       """Returns a user object, with various information about the user
-
-      steam64: The Steam64ID of the user
       """
 
-      steam64 = str(steam64)
-      if(len(steam64) != 17): raise Exception("The Steam64 provided is invalid")
+      if(s64 != None):
+         s64 = str(s64)
+         if(len(s64) != 17): raise Exception("The Steam64 provided is invalid")
+         aft = f'profiles/{s64}/'
+      elif(sid != None):
+         sid = str(sid)
+         aft = f'id/{sid}/'
+      else:
+         raise Exception("Invalid user parameters")
 
-      self.url = f'http://steamcommunity.com/profiles/{steam64}/'
+      self.url = f'http://steamcommunity.com/{aft}'
       self.soupMain = BeautifulSoup(req(self.url).text, 'html.parser')
+      if('error' in self.soupMain.title.text.lower()): raise Exception("Error retrieveing Steam Profile")
       self.soupBadges = BeautifulSoup(req(f'{self.url}badges/').text, 'html.parser')
       self.soupGames = BeautifulSoup(req(f'{self.url}games/?tab=all').text, 'html.parser')
       self.soupWish = BeautifulSoup(req(f'{self.url}wishlist/').text, 'html.parser')
       self.private = self.getPrivate()
       self.persona = self.getPersona()
       self.avatar = self.getAvatar()
-      if(self.private):
-         self.name = None
-         self.location = None
-         self.status = None
-         self.level = None
-         self.favBadge = None
-         self.counts = None
-         self.badges = None
-         self.games = None
-         self.recents = None
-         self.wishlist = None
-      else:
-         self.name = self.getName()
-         self.location = self.getLocation()
-         self.status = self.getStatus()
-         self.level = self.getLevel()
-         self.favBadge = self.getFavBadge()
-         self.counts = self.getCounts()
-         self.badges = self.getBadges()
-         self.games = self.getGames()
-         self.recents = self.getRecents()
-         self.wishlist = self.getWishlist()
+
+      self.name = None if self.private else self.getName()
+      self.location = None if self.private else self.getLocation()
+      self.status = None if self.private else self.getStatus()
+      self.level = None if self.private else self.getLevel()
+      self.favBadge = None if self.private else self.getFavBadge()
+      self.counts = None if self.private else self.getCounts()
+      self.badges = None if self.private else self.getBadges()
+      self.games = None if self.private else self.getGames()
+      self.recents = None if self.private else self.getRecents()
+      self.wishlist = None if self.private else self.getWishlist()
+      self.aliases = None if self.private else self.getAliases()
    def printAll(self):
       """For debugging purposes, prints all the non-callable items in the user object
       """
-      
+
       [print(f'{a}: {self.__getattribute__(a)}') for a in dir(self) if not a.startswith('__') and not a.startswith('soup') and not callable(evan.__getattribute__(a)) and a != 'req']
       print()
    def getPrivate(self):
@@ -81,6 +77,14 @@ class user:
       elem = self.soupMain.find('span', class_='actual_persona_name')
       persona = elem.text
       return persona
+   def getAliases(self):
+      """Returns the past display-names
+      """
+
+      als = []
+      data = loads(req(f'{self.url}ajaxaliases/').text)
+      for a in data: als.append(a['newname'])
+      return als
    def getName(self):
       """Returns the name of the user
       """
@@ -108,7 +112,7 @@ class user:
    def getStatus(self):
       """Returns the status of the user
       """
-      
+
       status = {'main': ''}
       mainElem = self.soupMain.find('div', class_='profile_in_game_header')
       descElem = self.soupMain.find('div', class_='profile_in_game_name')
@@ -121,18 +125,18 @@ class user:
    def getLevel(self):
       """Returns the Steam level of the user
       """
-      
+
       elem = self.soupMain.find('span', class_='friendPlayerLevelNum')
       level = MakeInt(elem.text)
       return level
    def getFavBadge(self):
       """Returns the user's favorite badge
       """
-      
+
       Badge = {'name': '', 'desc': '', 'xp': ''}
       parElem = self.soupMain.find('div', class_='favorite_badge')
       if(parElem == None): return None
-      
+
       nameElem = parElem.find('div', class_='name ellipsis').find('a', class_='whiteLink')
       descElem = parElem.find('div', class_='favorite_badge_icon')
       xpElem = parElem.find('div', class_='xp')
@@ -167,7 +171,7 @@ class user:
       rawText = RemoveAlls(self.soupGames.findAll('script')[-1].text)
       aftText = rawText[rawText.index('[{'):rawText.index('}]')+2]
       jsonData = loads(aftText)
-      
+
       for i in range(0, len(jsonData)): games[jsonData[i]['appid']] = Game(jsonData[i])
       return games
    def getRecents(self):
@@ -190,11 +194,11 @@ class user:
       for game in allGames:
          app = MakeInt(game.find('div', class_='popup_block2')['id'])
          priceElem = game.find('div', class_='discount_final_price') if (game.find('div', class_='discount_final_price') != None) else game.find('div', class_='price')
-         
+
          price = '' if priceElem == None else priceElem.text.strip().lower()
          if('free' in price): price = '0'
          if(price != None and price != ''): price = MakeFloat(price)
-         
+
          games[app] = {}
          games[app]['name'] = game.find('h4', class_='ellipsis').text
          games[app]['price'] = price
@@ -219,16 +223,16 @@ class Badge:
    def getGame(self):
       """Returns the game (or source) of the card
       """
-   
+
       game = self.inst.find('div', class_='badge_title').text.split('\xa0')[0].strip()
       return game
    def getLevXP(self):
       """Returns the level and/or the xp of the card
       """
 
-      lvlxp = RemoveAlls(self.inst.find('div', class_='').text).split(',')      
+      lvlxp = RemoveAlls(self.inst.find('div', class_='').text).split(',')
       for i in range(0, len(lvlxp)): lvlxp[i] = MakeInt(lvlxp[i])
-      
+
       lvlxp.reverse()
       lvlxp.append(None)
       return lvlxp
@@ -245,17 +249,19 @@ class Game:
       self.name = inst['name']
       self.logo = inst['logo']
       self.hours = MakeFloat(inst['hours_forever']) if 'hours_forever' in inst else 0
-      self.recent = MakeFloat(inst['hours']) if 'hours' in inst else 0     
+      self.recent = MakeFloat(inst['hours']) if 'hours' in inst else 0
       self.last = inst['last_played'] if 'last_played' in inst else 0
 
 
 if __name__ == '__main__':
    print("Hello Console!")
-   evan = user('76561198069463927')
+   evan = user(s64='76561198069463927')
+   evany = user(sid='BritishMystery')
    #evan.printAll()
 
 def test_main():
-   evan = user('76561198069463927')
+   evan = user(s64='76561198069463927')
+   evay = user(sid='BritishMystery')
    assert type(evan) != None
    assert evan.level != None
    assert len(evan.games) > 0
