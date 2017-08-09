@@ -1,7 +1,7 @@
 # Steam
 
 [![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam)
-[![Documentation Status](http://img.shields.io/badge/docs-1.2.1-yellow.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
+[![Documentation Status](http://img.shields.io/badge/docs-1.3-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
 [![Release](https://img.shields.io/badge/release-1.3-brightgreen.svg)](https://github.com/DocCodes/steam/releases/latest)
 [![Beta](https://img.shields.io/badge/beta-none-blue.svg)](https://github.com/DocCodes/steam)
 
@@ -30,7 +30,7 @@ sudo -H pip3 install .
 ```
 import steam
 
-evan = steam.user('76561198069463927') # My Steam account, provided in SteamID64
+evan = steam.user(s64='76561198069463927') # My Steam account, provided in SteamID64
 print(f'{evan.name} is Level {evan.level}, wow- how sad')
 ```
 output
