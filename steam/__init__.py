@@ -12,7 +12,7 @@ __copyright__ = "Copyright 2017, Evan Young"
 __credits__ = "Evan Young"
 
 __license__ = "GNU GPLv3"
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __maintainer__ = "Evan Young"
 __status__ = "Development"
 
@@ -254,6 +254,10 @@ if __name__ == '__main__':
    evan = user('76561198069463927')
    #evan.printAll()
 
-def test_answer():
+def test_main():
    evan = user('76561198069463927')
    assert type(evan) != None
+   assert evan.level != None
+   assert len(evan.games) > 0
+   assert evan.games[105600].hours != 0
+   assert evan.games[105600].hours != ''
