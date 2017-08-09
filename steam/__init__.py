@@ -2,8 +2,8 @@
 """A Steam API written for python without the clunky Steam API
 """
 from requests import get as req
-from bs4 import BeautifulSoup
-from json import loads
+from bs4 import BeautifulSoup as soup
+from json import loads as jsld
 from re import sub as reg
 from math import floor
 
@@ -12,15 +12,12 @@ __copyright__ = 'Copyright 2017, Evan Young'
 __credits__ = 'Evan Young'
 
 __license__ = 'GNU GPLv3'
-__version__ = '1.3-b1'
+__version__ = '1.3-b2'
 __maintainer__ = 'Evan Young'
 __status__ = 'Development'
 
 
-RemoveTabs = lambda text: text.replace('\t', '')
-RemoveRets = lambda text: text.replace('\r', '')
-RemoveNews = lambda text: text.replace('\n', '')
-RemoveAlls = lambda text: RemoveTabs(RemoveRets(RemoveNews(text)))
+RemoveAlls = lambda text: reg('[\t\r\n]', '', text)
 MakeInt = lambda text: int(reg('[^0-9]', '', text))
 MakeFloat = lambda text: float(reg('[^0-9.]', '', text))
 class user:
@@ -39,16 +36,18 @@ class user:
          raise Exception("Invalid user parameters")
 
       self.url = f'http://steamcommunity.com/{aft}'
-      self.soupMain = BeautifulSoup(req(self.url).text, 'html.parser')
+      self.soupMain = soup(req(self.url).text, 'html.parser')
       if('error' in self.soupMain.title.text.lower()): raise Exception("Error retrieveing Steam Profile")
-      self.soupBadges = BeautifulSoup(req(f'{self.url}badges/').text, 'html.parser')
-      self.soupGames = BeautifulSoup(req(f'{self.url}games/?tab=all').text, 'html.parser')
-      self.soupWish = BeautifulSoup(req(f'{self.url}wishlist/').text, 'html.parser')
+      self.soupDate = soup(req(f'{self.url}badges/1/').text, 'html.parser')
+      self.soupBadges = soup(req(f'{self.url}badges/').text, 'html.parser')
+      self.soupGames = soup(req(f'{self.url}games/?tab=all').text, 'html.parser')
+      self.soupWish = soup(req(f'{self.url}wishlist/').text, 'html.parser')
       self.private = self.getPrivate()
       self.persona = self.getPersona()
       self.avatar = self.getAvatar()
 
       self.name = None if self.private else self.getName()
+      self.date = None if self.private else  self.getDate()
       self.location = None if self.private else self.getLocation()
       self.status = None if self.private else self.getStatus()
       self.level = None if self.private else self.getLevel()
@@ -63,7 +62,7 @@ class user:
       """For debugging purposes, prints all the non-callable items in the user object
       """
 
-      [print(f'{a}: {self.__getattribute__(a)}') for a in dir(self) if not a.startswith('__') and not a.startswith('soup') and not callable(evan.__getattribute__(a)) and a != 'req']
+      [print(f'{a}: {self.__getattribute__(a)}') for a in dir(self) if not a.startswith('__') and not a.startswith('soup') and not callable(self.__getattribute__(a)) and a != 'req']
       print()
    def getPrivate(self):
       """Returns a bool of whether or not the profile is private
@@ -82,7 +81,7 @@ class user:
       """
 
       als = []
-      data = loads(req(f'{self.url}ajaxaliases/').text)
+      data = jsld(req(f'{self.url}ajaxaliases/').text)
       for a in data: als.append(a['newname'])
       return als
    def getName(self):
@@ -103,6 +102,12 @@ class user:
       loc['flag'] = parElem.find('img')['src']
       loc['contents'] = parElem.contents[-1].strip()
       return loc
+   def getDate(self):
+      """Returns the creation-date of the Steam Profile
+      """
+
+      since = self.soupDate.find('div', class_='badge_description').text
+      return since.replace('Member since ', '')
    def getAvatar(self):
       """Returns the url of the avatar of the user
       """
@@ -170,7 +175,7 @@ class user:
       games = {}
       rawText = RemoveAlls(self.soupGames.findAll('script')[-1].text)
       aftText = rawText[rawText.index('[{'):rawText.index('}]')+2]
-      jsonData = loads(aftText)
+      jsonData = jsld(aftText)
 
       for i in range(0, len(jsonData)): games[jsonData[i]['appid']] = Game(jsonData[i])
       return games
@@ -256,7 +261,6 @@ class Game:
 if __name__ == '__main__':
    print("Hello Console!")
    evan = user(s64='76561198069463927')
-   evany = user(sid='BritishMystery')
    #evan.printAll()
 
 def test_main():

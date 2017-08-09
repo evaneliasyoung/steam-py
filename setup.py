@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
    name = 'steam',
    packages = ['steam'],
-   version = '1.3-b1',
+   version = '1.3-b2',
    description = 'A Steam API',
    author = 'Evan Young',
    url = 'https://github.com/DocCodes/steam',
@@ -13,8 +13,9 @@ setup(
       'Development Status :: 5 - Production',
       'Intended Audience :: Developers',
       'Topic :: Steam User API',
-      'License :: GNU GPLv3',
-      'Programming Language :: Python :: 3.6'
+      'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+      'Programming Language :: Python :: 3.6',
+      'Natural Language :: English'
    ],
    install_requires = [
       'requests',
