@@ -253,3 +253,7 @@ if __name__ == '__main__':
    print("Hello Console!")
    evan = user('76561198069463927')
    #evan.printAll()
+
+def test_answer():
+   evan = user('76561198069463927')
+   assert type(evan) != None
