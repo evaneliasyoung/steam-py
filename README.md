@@ -1,10 +1,9 @@
 # Steam
 
 [![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam)
+[![Documentation Status](http://img.shields.io/badge/docs-1.2.1-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
 [![Release](https://img.shields.io/badge/release-1.2.1-brightgreen.svg)](https://github.com/DocCodes/steam/releases/latest)
 ![Beta](https://img.shields.io/badge/beta-1.3-blue.svg)
-[![Documentation Status](http://img.shields.io/badge/docs-1.2.1-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
-![CodeClimate](https://img.shields.io/badge/code%20climate-3.09-brightgreen.svg)
 
 The time from profile request to usable data is ≈ 3 seconds
 
