@@ -43,3 +43,4 @@ View the wiki for documentation on the user type
 To install any modules use `pip3 install (module)`
 * requests
 * beautifulsoup4
+* pytest
