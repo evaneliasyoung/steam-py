@@ -12,7 +12,7 @@ __copyright__ = 'Copyright 2017, Evan Young'
 __credits__ = 'Evan Young'
 
 __license__ = 'GNU GPLv3'
-__version__ = '1.3-b2'
+__version__ = '1.3'
 __maintainer__ = 'Evan Young'
 __status__ = 'Development'
 
@@ -107,6 +107,7 @@ class user:
       """
 
       since = self.soupDate.find('div', class_='badge_description').text
+      since = RemoveAlls(since.replace('Member since', ''))
       return since.replace('Member since ', '')
    def getAvatar(self):
       """Returns the url of the avatar of the user
