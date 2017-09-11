@@ -12,7 +12,7 @@ __copyright__ = 'Copyright 2017, Evan Young'
 __credits__ = 'Evan Young'
 
 __license__ = 'GNU GPLv3'
-__version__ = '1.3'
+__version__ = '1.3.1'
 __maintainer__ = 'Evan Young'
 __status__ = 'Development'
 
@@ -27,17 +27,17 @@ class user:
 
       if(s64 != None):
          s64 = str(s64)
-         if(len(s64) != 17): raise Exception("The Steam64 provided is invalid")
+         if(len(s64) != 17): raise Exception('The Steam64 provided is invalid')
          aft = f'profiles/{s64}/'
       elif(sid != None):
          sid = str(sid)
          aft = f'id/{sid}/'
       else:
-         raise Exception("Invalid user parameters")
+         raise Exception('Invalid user parameters')
 
       self.url = f'http://steamcommunity.com/{aft}'
       self.soupMain = soup(req(self.url).text, 'html.parser')
-      if('error' in self.soupMain.title.text.lower()): raise Exception("Error retrieveing Steam Profile")
+      if('error' in self.soupMain.title.text.lower()): raise Exception('Error retrieveing Steam Profile')
       self.soupDate = soup(req(f'{self.url}badges/1/').text, 'html.parser')
       self.soupBadges = soup(req(f'{self.url}badges/').text, 'html.parser')
       self.soupGames = soup(req(f'{self.url}games/?tab=all').text, 'html.parser')
@@ -108,7 +108,9 @@ class user:
 
       since = self.soupDate.find('div', class_='badge_description').text
       since = RemoveAlls(since.replace('Member since', ''))
-      return since.replace('Member since ', '')
+      since = since.replce('Member since', '')
+      since = since.replce('.', '')
+      return since
    def getAvatar(self):
       """Returns the url of the avatar of the user
       """
@@ -123,9 +125,9 @@ class user:
       mainElem = self.soupMain.find('div', class_='profile_in_game_header')
       descElem = self.soupMain.find('div', class_='profile_in_game_name')
       status['main'] = mainElem.text.replace('Currently ', '').lower()
-      if(status['main'] == "offline"):
+      if(status['main'] == 'offline'):
          status['last'] = descElem.text.replace('Last Online ', '').lower()
-      elif(status['main'] == "in-game"):
+      elif(status['main'] == 'in-game'):
          status['game'] = descElem.text
       return status
    def getLevel(self):
@@ -260,7 +262,7 @@ class Game:
 
 
 if __name__ == '__main__':
-   print("Hello Console!")
+   print('Hello Console!')
    evan = user(s64='76561198069463927')
    #evan.printAll()
 
