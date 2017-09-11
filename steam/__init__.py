@@ -108,8 +108,8 @@ class user:
 
       since = self.soupDate.find('div', class_='badge_description').text
       since = RemoveAlls(since.replace('Member since', ''))
-      since = since.replce('Member since', '')
-      since = since.replce('.', '')
+      since = since.replace('Member since', '')
+      since = since.replace('.', '')
       return since
    def getAvatar(self):
       """Returns the url of the avatar of the user
