@@ -10,7 +10,7 @@ setup(
    download_url = 'https://github.com/DocCodes/steam/archive/master.tar.gz',
    keywords = ['steam', 'api', 'userdata'],
    classifiers = [
-      'Development Status :: 5 - Production',
+      'Development Status :: 5 - Production/Stable',
       'Intended Audience :: Developers',
       'Topic :: Steam User API',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
