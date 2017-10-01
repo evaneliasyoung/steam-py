@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
    name = 'steam',
    packages = ['steam'],
-   version = '1.3.2',
+   version = '1.3.3',
    description = 'A Steam API',
    author = 'Evan Young',
    url = 'https://github.com/DocCodes/steam',
