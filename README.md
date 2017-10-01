@@ -34,7 +34,8 @@ Evan is Level 27, wow- how sad
 View the wiki for documentation on the user type
 
 ## Requirements
-To install any modules (these should be installed using the suggested inistallation method) use `pip3 install (module)`
+Any requirements will automatically be installed using the aforementioned installation method.
+To install any modules use `pip3 install (module)`
 * requests
 * beautifulsoup4
 * pytest
