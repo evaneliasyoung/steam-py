@@ -7,22 +7,17 @@
 The time from profile request to usable data is ≈ 3 seconds
 
 ## Installation
-1. First download this git
-2. Change to the steam directory
-3. Then use pip3 to install it
-
 ### Windows
-*See above to obtain code*
 ```
-cd steam
-pip3 install .
+pip3 install steam-py
 ```
-### Linux / macOS
+### macOS
 ```
-cd ~/Downloads
-git clone https://github.com/DocCodes/steam
-cd steam
-sudo -H pip3 install .
+sudo -H pip3 install steam-py
+```
+### Linux
+```
+sudo pip3 install steam-py
 ```
 
 ## How-To Use
