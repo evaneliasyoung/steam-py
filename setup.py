@@ -12,7 +12,7 @@ setup(
    classifiers = [
       'Development Status :: 5 - Production/Stable',
       'Intended Audience :: Developers',
-      'Topic :: Steam User API',
+      'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       'Programming Language :: Python :: 3.6',
       'Natural Language :: English'
