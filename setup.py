@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from distutils.core import setup
 setup(
-   name = 'steam',
+   name = 'steam-py',
    packages = ['steam'],
    version = '1.3.3',
    description = 'A Steam API',
