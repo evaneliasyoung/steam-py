@@ -1,8 +1,9 @@
 # Steam
 
-[![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam)
-[![Documentation Status](http://img.shields.io/badge/docs-1.3.3-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
-[![Release](https://img.shields.io/github/release/doccodes/steam.svg)](https://github.com/DocCodes/steam/releases/latest)
+[![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam-py)
+[![Documentation Status](http://img.shields.io/badge/docs-v1.3.3-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam-py/wiki)
+[![Release](https://img.shields.io/github/release/doccodes/steam.svg)](https://github.com/DocCodes/steam-py/releases/latest)
+[![PyPI](https://img.shields.io/pypi/v/nine.svg)](https://pypi.python.org/pypi/steam-py/1.3.3)
 
 The time from profile request to usable data is ≈ 3 seconds
 
