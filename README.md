@@ -36,6 +36,7 @@ View the wiki for documentation on the user type
 
 ## Requirements
 Any requirements will automatically be installed using the aforementioned installation method.
+
 To install any modules use `pip3 install (module)`
 * requests
 * beautifulsoup4
