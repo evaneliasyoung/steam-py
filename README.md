@@ -1,29 +1,24 @@
 # Steam
 
-[![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam)
-[![Documentation Status](http://img.shields.io/badge/docs-1.3.3-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam/wiki)
-[![Release](https://img.shields.io/github/release/doccodes/steam.svg)](https://github.com/DocCodes/steam/releases/latest)
-[![License](https://img.shields.io/github/license/doccodes/steam.svg)](https://github.com/DocCodes/steam/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/DocCodes/steam.svg?branch=master)](https://travis-ci.org/DocCodes/steam-py)
+[![Documentation Status](http://img.shields.io/badge/docs-v1.3.3-brightgreen.svg?style=flat)](https://github.com/DocCodes/steam-py/wiki)
+[![Release](https://img.shields.io/github/release/doccodes/steam.svg)](https://github.com/DocCodes/steam-py/releases/latest)
+[![PyPI](https://img.shields.io/pypi/v/steam-py.svg)](https://pypi.python.org/pypi/steam-py/1.3.3)
 
 The time from profile request to usable data is ≈ 3 seconds
 
 ## Installation
-1. First download this git
-2. Change to the steam directory
-3. Then use pip3 to install it
-
 ### Windows
-*See above to obtain code*
 ```
-cd steam
-pip3 install .
+pip3 install steam-py
 ```
-### Linux / macOS
+### macOS
 ```
-cd ~/Downloads
-git clone https://github.com/DocCodes/steam
-cd steam
-sudo -H pip3 install .
+sudo -H pip3 install steam-py
+```
+### Linux
+```
+sudo pip3 install steam-py
 ```
 
 ## How-To Use
@@ -40,6 +35,7 @@ Evan is Level 27, wow- how sad
 View the wiki for documentation on the user type
 
 ## Requirements
+Any requirements will automatically be installed using the aforementioned installation method.
 To install any modules use `pip3 install (module)`
 * requests
 * beautifulsoup4
