@@ -3,11 +3,11 @@ from distutils.core import setup
 setup(
    name = 'steam-py',
    packages = ['steam'],
-   version = '1.3.3',
+   version = '1.3.4',
    description = 'A Steam API',
    author = 'Evan Young',
-   url = 'https://github.com/DocCodes/steam',
-   download_url = 'https://github.com/DocCodes/steam/archive/master.tar.gz',
+   url = 'https://github.com/DocCodes/steam-py',
+   download_url = 'https://github.com/DocCodes/steam-py/archive/master.tar.gz',
    keywords = ['steam', 'api', 'userdata'],
    classifiers = [
       'Development Status :: 5 - Production/Stable',

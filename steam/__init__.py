@@ -12,9 +12,9 @@ __copyright__ = 'Copyright 2017, Evan Young'
 __credits__ = 'Evan Young'
 
 __license__ = 'GNU GPLv3'
-__version__ = '1.3.3'
+__version__ = '1.3.4'
 __maintainer__ = 'Evan Young'
-__status__ = 'Development'
+__status__ = 'Production'
 
 
 RemoveAlls = lambda text: reg('[\t\r\n]', '', text)
