@@ -1,5 +1,0 @@
-language: python
-dist: trusty
-python: "3.6"
-install: "pip install ."
-script: "pytest steam/__init__.py"

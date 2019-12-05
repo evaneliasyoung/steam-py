@@ -6,8 +6,8 @@ setup(
     version='1.3.5',
     description='A Steam API',
     author='Evan Young',
-    url='https://github.com/DocCodes/steam-py',
-    download_url='https://github.com/DocCodes/steam-py/archive/master.tar.gz',
+    url='https://github.com/evaneliasyoung/steam-py',
+    download_url='https://github.com/evaneliasyoung/steam-py/archive/master.tar.gz',
     keywords=['steam', 'api', 'userdata'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -22,5 +22,5 @@ setup(
         'beautifulsoup4',
         'pytest'
     ],
-    python_requires='~=3.6'
+    python_requires='~=3.7'
 )

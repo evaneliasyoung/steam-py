@@ -25,12 +25,12 @@ sudo pip3 install steam-py
 ```
 import steam
 
-evan = steam.user(s64='76561198069463927') # My Steam account, provided in SteamID64
+evan = steam.User(s64='76561198069463927') # My Steam account, provided in SteamID64
 print(f'{evan.name} is Level {evan.level}, wow- how sad')
 ```
 output
 ```
-Evan is Level 27, wow- how sad
+Evan Elias Young is Level 40, wow- how sad
 ```
 View the wiki for documentation on the user type
 
