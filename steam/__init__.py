@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """A Steam API written for python without the clunky Steam API
 """
-from requests import get as req
-from bs4 import BeautifulSoup
 from json import loads as jsld
 from datetime import datetime as dt
 from re import sub as reg
 from typing import List, Dict, Optional, Any
 from os import system
+from bs4 import BeautifulSoup
+from requests import get as req
 
 __author__ = 'Evan Elias Young'
-__copyright__ = 'Copyright 2017-2019, Evan Elias Young'
+__copyright__ = 'Copyright 2017-2020, Evan Elias Young'
 __credits__ = 'Evan Elias Young'
 
 __license__ = 'GNU GPLv3'
@@ -19,13 +19,19 @@ __maintainer__ = 'Evan Elias Young'
 __status__ = 'Production'
 
 
-def RemoveAlls(text: str) -> str: return reg('[\t\r\n]', '', text)
+def remove_all_ws(text: str) -> str:
+    """Will remove all tabs, returns, and newlines from text."""
+    return reg('[\t\r\n]', '', text)
 
 
-def MakeInt(text: str) -> int: return int(reg('[^0-9]', '', text))
+def make_int(text: str) -> int:
+    """Will make the first sequence of digits an integer."""
+    return int(reg('[^0-9]', '', text))
 
 
-def MakeFloat(text: str) -> float: return float(reg('[^0-9.]', '', text))
+def make_float(text: str) -> float:
+    """Will make the first sequence of digits a float."""
+    return float(reg('[^0-9.]', '', text))
 
 
 class Location:
@@ -51,37 +57,37 @@ class Badge:
     def __init__(self, inst: BeautifulSoup) -> None:
         """Will return a badge object, with various information about each badge."""
         self.inst: BeautifulSoup = inst
-        self.title: str = self.getTitle()
-        self.game: str = self.getGame()
-        self.xp: int = self.getXP()
-        self.level: Optional[int] = self.getLevel()
-        self.earned: int = self.getEarnTime()
+        self.title: str = self.get_title()
+        self.game: str = self.get_game()
+        self.exp: int = self.get_exp()
+        self.level: Optional[int] = self.get_level()
+        self.earned: int = self.get_earn_time()
 
-    def getTitle(self) -> str:
+    def get_title(self) -> str:
         """Will return the title of the card."""
         return str(self.inst.find('div', class_='badge_info_title').text)
 
-    def getGame(self) -> str:
+    def get_game(self) -> str:
         """Will return the game (or source) of the card."""
         return str(self.inst.find('div', class_='badge_title').text.split('\xa0')[0].strip())
 
-    def getLevel(self) -> Optional[int]:
+    def get_level(self) -> Optional[int]:
         """Will return the level of the card."""
-        lvlxp: List[str] = RemoveAlls(
+        lvlxp: List[str] = remove_all_ws(
             self.inst.find('div', class_='').text).split(',')
         if len(lvlxp) == 2:
-            return MakeInt(lvlxp[0])
+            return make_int(lvlxp[0])
         return None
 
-    def getXP(self) -> int:
-        """Will return the level of the card."""
-        lvlxp: List[str] = RemoveAlls(
+    def get_exp(self) -> int:
+        """Will return the experience of the card."""
+        lvlxp: List[str] = remove_all_ws(
             self.inst.find('div', class_='').text).split(',')
         if len(lvlxp) == 2:
-            return MakeInt(lvlxp[1])
-        return MakeInt(lvlxp[0])
+            return make_int(lvlxp[1])
+        return make_int(lvlxp[0])
 
-    def getEarnTime(self) -> int:
+    def get_earn_time(self) -> int:
         """Will return the time the user earned the badge."""
         tmp: List[str] = self.inst.find(
             'div', class_='badge_info_unlocked').text.strip().replace('Unlocked ', '').split(' ')
@@ -98,9 +104,9 @@ class Game:
         self.appid: int = int(inst['appid'])
         self.name: str = inst['name']
         self.logo: str = inst['logo']
-        self.hours: float = MakeFloat(
+        self.hours: float = make_float(
             inst['hours_forever']) if 'hours_forever' in inst else 0.0
-        self.recent: float = MakeFloat(
+        self.recent: float = make_float(
             inst['hours']) if 'hours' in inst else 0.0
         self.last: int = int(inst['last_played']) * \
             1000 if 'last_played' in inst else 0
@@ -111,227 +117,227 @@ class User:
 
     def __init__(self, s64: Optional[str] = None, sid: Optional[str] = None) -> None:
         """Will return a user object, with various information about the user."""
-        if s64 != None:
+        if s64 is not None:
             if len(str(s64)) != 17:
                 raise Exception('The Steam64 provided is invalid')
             aft = f'profiles/{str(s64)}/'
-        elif sid != None:
+        elif sid is not None:
             aft = f'id/{str(sid)}/'
         else:
             raise Exception('Invalid user parameters')
 
         self.url: str = f'http://steamcommunity.com/{aft}'
-        self.soupMain = BeautifulSoup(req(self.url).text, 'html.parser')
-        if 'error' in self.soupMain.title.text.lower():
+        self.soup_main = BeautifulSoup(req(self.url).text, 'html.parser')
+        if 'error' in self.soup_main.title.text.lower():
             raise Exception('Error retrieveing Steam Profile')
-        self.soupDate = BeautifulSoup(
+        self.soup_date = BeautifulSoup(
             req(f'{self.url}badges/1/').text, 'html.parser')
-        self.soupBadges = BeautifulSoup(
+        self.soup_badges = BeautifulSoup(
             req(f'{self.url}badges/').text, 'html.parser')
-        self.soupGames = BeautifulSoup(
+        self.soup_games = BeautifulSoup(
             req(f'{self.url}games/?tab=all').text, 'html.parser')
-        self.soupWish = BeautifulSoup(
+        self.soup_wish = BeautifulSoup(
             req(f'{self.url}wishlist/').text, 'html.parser')
-        self.private: bool = self.getPrivate()
-        self.persona: str = self.getPersona()
-        self.avatar: str = self.getAvatar()
+        self.private: bool = self.get_private()
+        self.persona: str = self.get_persona()
+        self.avatar: str = self.get_avatar()
 
-        self.name: Optional[str] = self.getName()
-        self.created: Optional[int] = self.getCreationTime()
-        self.location: Optional[Location] = self.getLocation()
-        self.status: Optional[Status] = self.getStatus()
-        self.level: Optional[int] = self.getLevel()
-        self.counts: Optional[Dict[str, int]] = self.getCounts()
-        self.badges: Optional[List[Badge]] = self.getBadges()
-        self.favBadge: Optional[Badge] = self.getFavBadge()
-        self.games: Optional[Dict[int, Game]] = self.getGames()
-        self.recents: Optional[List[Game]] = self.getRecents()
-        self.wishlist: Optional[Dict[int, Any]] = self.getWishlist()
-        self.aliases: Optional[List[str]] = self.getAliases()
+        self.name: Optional[str] = self.get_name()
+        self.created: Optional[int] = self.get_creation_time()
+        self.location: Optional[Location] = self.get_location()
+        self.status: Optional[Status] = self.get_status()
+        self.level: Optional[int] = self.get_level()
+        self.counts: Optional[Dict[str, int]] = self.get_counts()
+        self.badges: Optional[List[Badge]] = self.get_badges()
+        self.favorite_badge: Optional[Badge] = self.get_favorite_badge()
+        self.games: Optional[Dict[int, Game]] = self.get_games()
+        self.recents: Optional[List[Game]] = self.get_recents()
+        self.wishlist: Optional[Dict[int, Any]] = self.get_wishlist()
+        self.aliases: Optional[List[str]] = self.get_aliases()
 
-    def printAll(self) -> None:
+    def print_all(self) -> None:
         """For debugging purposes, prints all the non-callable items in the user object."""
-        for a in dir(self):
-            if not a.startswith('__') and not a.startswith('soup') and not callable(self.__getattribute__(a)) and a != 'req':
-                print(f'{a}: {self.__getattribute__(a)}')
+        for key in dir(self):
+            if not key.startswith('__') and not key.startswith('soup') and not callable(self.__getattribute__(key)) and key != 'req':
+                print(f'{key}: {self.__getattribute__(key)}')
         print()
 
-    def getPrivate(self) -> bool:
+    def get_private(self) -> bool:
         """Will return a bool of whether or not the profile is private."""
-        return bool(self.soupMain.find('div', class_='profile_private_info') != None)
+        return bool(self.soup_main.find('div', class_='profile_private_info') is not None)
 
-    def getPersona(self) -> str:
+    def get_persona(self) -> str:
         """Will return the display-name (persona) of the user."""
-        return str(self.soupMain.find('span', class_='actual_persona_name').text)
+        return str(self.soup_main.find('span', class_='actual_persona_name').text)
 
-    def getAliases(self) -> Optional[List[str]]:
+    def get_aliases(self) -> Optional[List[str]]:
         """Will return the past display-names."""
         if self.private:
             return None
-        als: List[str] = []
+        aliases: List[str] = []
         data: List[Dict[str, str]] = jsld(req(f'{self.url}ajaxaliases/').text)
-        for a in data:
-            als.append(a['newname'])
-        return als
+        for alias in data:
+            aliases.append(alias['newname'])
+        return aliases
 
-    def getName(self) -> Optional[str]:
+    def get_name(self) -> Optional[str]:
         """Will return the name of the user."""
         if self.private:
             return None
-        parElem: Optional[BeautifulSoup] = self.soupMain.find(
+        par_el: Optional[BeautifulSoup] = self.soup_main.find(
             'div', class_='header_real_name ellipsis')
-        if parElem == None or parElem.find('bdi').text == '':
+        if par_el is None or par_el.find('bdi').text == '':
             return None
-        return parElem.find('bdi').text
+        return par_el.find('bdi').text
 
-    def getLocation(self) -> Optional[Location]:
+    def get_location(self) -> Optional[Location]:
         """Will return the location of the user."""
         if self.private:
             return None
-        parElem: Optional[BeautifulSoup] = self.soupMain.find(
+        par_el: Optional[BeautifulSoup] = self.soup_main.find(
             'div', class_='header_real_name ellipsis')
-        if parElem == None or parElem.find('img') == None:
+        if par_el is None or par_el.find('img') is None:
             return None
-        return Location(parElem.find('img')['src'], parElem.contents[-1].strip())
+        return Location(par_el.find('img')['src'], par_el.contents[-1].strip())
 
-    def getCreationTime(self) -> Optional[int]:
+    def get_creation_time(self) -> Optional[int]:
         """Will return the creation-time of the Steam Profile."""
         if self.private:
             return None
-        year: int = int(RemoveAlls(self.soupDate.find(
+        year: int = int(remove_all_ws(self.soup_date.find(
             'div', class_='badge_description').text)[-5: -1])
-        tmp: List[str] = RemoveAlls(self.soupDate.find(
+        tmp: List[str] = remove_all_ws(self.soup_date.find(
             'div', class_='badge_info_unlocked').text)[9:].split(' ')
-        return int(dt.strptime(f'{year} {tmp[0]} {tmp[1]:0>2} {tmp[3].upper():0>7}', '%Y %b %d %I:%M%p').timestamp() * 1000)
+        return int(dt.strptime(f'{year} {tmp[0]} {tmp[1][:2]:0>2} {tmp[-1].upper():0>7}', '%Y %b %d %I:%M%p').timestamp() * 1000)
 
-    def getAvatar(self) -> str:
+    def get_avatar(self) -> str:
         """Will return the url of the avatar of the user."""
-        return str(self.soupMain.find('div', class_='playerAvatarAutoSizeInner').find('img')['src'])
+        return str(self.soup_main.find('div', class_='playerAvatarAutoSizeInner').find('img')['src'])
 
-    def getStatus(self) -> Optional[Status]:
+    def get_status(self) -> Optional[Status]:
         """Will return the status of the user."""
         if self.private:
             return None
-        mainElem: BeautifulSoup = self.soupMain.find(
+        main_el: BeautifulSoup = self.soup_main.find(
             'div', class_='profile_in_game_header')
-        descElem: BeautifulSoup = self.soupMain.find(
+        desc_el: BeautifulSoup = self.soup_main.find(
             'div', class_='profile_in_game_name')
-        main: str = mainElem.text.replace('Currently ', '').lower()
+        main: str = main_el.text.replace('Currently ', '').lower()
         last: Optional[str] = None
         game: Optional[str] = None
-        if main == 'offline':
-            last = descElem.text.replace('Last Online ', '').lower()
-        elif main == 'in-game':
-            game = descElem.text
+        if desc_el:
+            if main == 'offline':
+                last = desc_el.text.replace('Last Online ', '').lower()
+            elif main == 'in-game':
+                game = desc_el.text
         return Status(main, game, last)
 
-    def getLevel(self) -> int:
+    def get_level(self) -> int:
         """Will return the Steam level of the user."""
         if self.private:
             return False
-        elem: BeautifulSoup = self.soupMain.find('span', class_='friendPlayerLevelNum')
-        level: int = MakeInt(elem.text)
+        elem: BeautifulSoup = self.soup_main.find('span', class_='friendPlayerLevelNum')
+        level: int = make_int(elem.text)
         return level
 
-    def getFavBadge(self) -> Optional[Badge]:
+    def get_favorite_badge(self) -> Optional[Badge]:
         """Will return the user's favorite badge."""
-        if self.private or not(self.badges):
+        if self.private or not self.badges:
             return None
-        Badge: Dict[str, Any] = {'name': '', 'desc': '', 'xp': ''}
-        parElem: Optional[BeautifulSoup] = self.soupMain.find(
+        par_el: Optional[BeautifulSoup] = self.soup_main.find(
             'div', class_='favorite_badge')
-        if parElem == None:
+        if par_el is None:
             return None
 
-        name: str = parElem.find('div', class_='name ellipsis').find(
+        name: str = par_el.find('div', class_='name ellipsis').find(
             'a', class_='whiteLink').text
-        for b in self.badges:
-            if b.title == name:
-                return b
+        for badge in self.badges:
+            if badge.title == name:
+                return badge
         return None
 
-    def getCounts(self) -> Optional[Dict[str, int]]:
+    def get_counts(self) -> Optional[Dict[str, int]]:
         """Will return the counts of the various items."""
         if self.private:
             return None
         counts: Dict[str, int] = {'badges': 0, 'games': 0, 'screenshots': 0, 'videos': 0, 'workshopitems': 0,
                                   'reviews': 0, 'guides': 0, 'artwork': 0, 'groups': 0, 'friends': 0}
-        lblEls: List[BeautifulSoup] = self.soupMain.findAll(
+        lbl_els: List[BeautifulSoup] = self.soup_main.findAll(
             'span', class_='count_link_label')
-        conEls: List[BeautifulSoup] = self.soupMain.findAll(
+        cnt_els: List[BeautifulSoup] = self.soup_main.findAll(
             'span', class_='profile_count_link_total')
-        for i in range(0, len(conEls)):
-            key: str = lblEls[i].text.strip().lower()
+        for i, cnt_el in enumerate(cnt_els):
+            key: str = lbl_els[i].text.strip().lower()
             if key != 'inventory':
-                counts[key] = int(conEls[i].text.strip())
+                counts[key] = int(cnt_el.text.strip())
         return counts
 
-    def getBadges(self) -> Optional[List[Badge]]:
+    def get_badges(self) -> Optional[List[Badge]]:
         """Will return the earned badges of the user."""
         if self.private:
             return None
         badges: List[Badge] = []
-        allElem: List[Any] = self.soupBadges.findAll(
+        all_el: List[Any] = self.soup_badges.findAll(
             'div', class_='badge_row_inner')
-        for bdinst in allElem:
-            badges.append(Badge(bdinst))
+        for bd_el in all_el:
+            badges.append(Badge(bd_el))
         return badges
 
-    def getGames(self) -> Optional[Dict[int, Game]]:
+    def get_games(self) -> Optional[Dict[int, Game]]:
         """Will return the games of the user."""
         if self.private:
             return None
         games: Dict[int, Game] = {}
-        rawText: str = RemoveAlls(self.soupGames.findAll('script')[-1].text)
-        aftText: str
+        raw_text: str = remove_all_ws(self.soup_games.findAll('script')[-1].text)
+        aft_text: str
         try:
-            aftText = rawText[rawText.index('[{'):rawText.index('}]')+2]
+            aft_text = raw_text[raw_text.index('[{'):raw_text.index('}]')+2]
         except:
             return None
-        jsonData = jsld(aftText)
+        json_data = jsld(aft_text)
 
-        for i in range(0, len(jsonData)):
-            games[jsonData[i]['appid']] = Game(jsonData[i])
+        for game, _i in enumerate(json_data):
+            games[game['appid']] = Game(game)
         return games
 
-    def getRecents(self) -> Optional[List[Game]]:
+    def get_recents(self) -> Optional[List[Game]]:
         """Will return the recently played games of the user."""
-        if self.private or not(self.games):
+        if self.private or not self.games:
             return None
-        strRecents: List[str] = []
+        str_recents: List[str] = []
         recents: List[Game] = []
-        allGames: List[BeautifulSoup] = self.soupMain.findAll(
+        all_games: List[BeautifulSoup] = self.soup_main.findAll(
             'div', class_='recent_game_content')
-        for gameElem in allGames:
-            parElem: BeautifulSoup = gameElem.find('div', class_='game_name')
-            nameElem: BeautifulSoup = parElem.find('a', class_='whiteLink')
-            strRecents.append(nameElem.text.strip())
+        for game_el in all_games:
+            par_el: BeautifulSoup = game_el.find('div', class_='game_name')
+            name_el: BeautifulSoup = par_el.find('a', class_='whiteLink')
+            str_recents.append(name_el.text.strip())
         for game in self.games:
-            if self.games[game].name in strRecents:
+            if self.games[game].name in str_recents:
                 recents.append(self.games[game])
         return recents
 
-    def getWishlist(self) -> Optional[Dict[int, Any]]:
+    def get_wishlist(self) -> Optional[Dict[int, Any]]:
         """Will return the wishlist of the user."""
         if self.private:
             return None
         games: Dict[int, Any] = {}
-        allGames = self.soupWish.findAll('div', class_='wishlistRowItem')
-        for game in allGames:
-            app: int = MakeInt(game.find('div', class_='popup_block2')['id'])
-            priceElem: Optional[BeautifulSoup] = game.find('div', class_='discount_final_price') if game.find(
-                'div', class_='discount_final_price') != None else game.find('div', class_='price')
+        all_games = self.soup_wish.findAll('div', class_='wishlistRowItem')
+        for game in all_games:
+            app: int = make_int(game.find('div', class_='popup_block2')['id'])
+            price_el: Optional[BeautifulSoup] = game.find('div', class_='discount_final_price') if game.find(
+                'div', class_='discount_final_price') is not None else game.find('div', class_='price')
 
-            rawPrice: str = '' if priceElem == None else priceElem.text.strip().lower()
+            str_price: str = '' if price_el is None else price_el.text.strip().lower()
             price: float
-            if 'free' in rawPrice:
+            if 'free' in str_price:
                 price = 0
-            price = MakeFloat(rawPrice)
+            price = make_float(str_price)
 
             games[app] = {}
             games[app]['name'] = game.find('h4', class_='ellipsis').text
             games[app]['price'] = price
-            games[app]['rank'] = MakeInt(
+            games[app]['rank'] = make_int(
                 game.find('div', class_='wishlist_rank_ro').text)
             games[app]['date'] = game.find(
                 'div', class_='wishlist_added_on ellipsis').text.strip().replace('Added on ', '')
@@ -339,7 +345,8 @@ class User:
 
 
 if __name__ == '__main__':
-    """Handles the script if run from a console."""
     print('Hello Console!')
     evan: User = User(s64='76561198069463927')
+    evan.print_all()
     jon: User = User(s64='76561198065605885')
+    jon.print_all()
