@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='steam-py',
     packages=['steam'],
-    version='1.3.5',
+    version='1.4.0',
     description='A Steam API',
     author='Evan Young',
     url='https://github.com/evaneliasyoung/steam-py',
